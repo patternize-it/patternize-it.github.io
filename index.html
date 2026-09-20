@@ -3,301 +3,320 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Patternize — a measurement layer for the neurological exam</title>
-<meta name="description" content="Patternize turns cognitive, motor, and EEG assessments into a single longitudinal pattern for neurologists — built for clinics, not yet for general release.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000000'/%3E%3Cg stroke='%23E7E9EE' stroke-width='1.5' stroke-linecap='round' fill='none' opacity='0.85'%3E%3Cline x1='16' y1='48' x2='47' y2='45'/%3E%3Cline x1='16' y1='48' x2='48' y2='38'/%3E%3Cline x1='16' y1='48' x2='47' y2='29'/%3E%3Cline x1='16' y1='48' x2='44' y2='19'/%3E%3Cline x1='16' y1='48' x2='38' y2='11'/%3E%3C/g%3E%3Ccircle cx='16' cy='48' r='3.6' fill='%2334C48A'/%3E%3C/svg%3E">
+<title>Patternize — a measurement layer for brain function</title>
+<meta name="description" content="Patternize measures what a neurological exam already looks for — camera-tracked movement and facial expression, EEG read visually, standardized cognitive testing, and more as it's added — as one comparable, patient-specific record.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%232b2f37'/%3E%3Cg stroke='%23eef0f4' stroke-width='1.5' stroke-linecap='round' fill='none' opacity='0.9'%3E%3Cline x1='16' y1='48' x2='51' y2='48'/%3E%3Cline x1='16' y1='48' x2='51' y2='42'/%3E%3Cline x1='16' y1='48' x2='51' y2='36'/%3E%3Cline x1='16' y1='48' x2='51' y2='30'/%3E%3Cline x1='16' y1='48' x2='51' y2='24'/%3E%3Cline x1='16' y1='48' x2='51' y2='18'/%3E%3Cline x1='16' y1='48' x2='51' y2='12'/%3E%3C/g%3E%3Ccircle cx='16' cy='48' r='4' fill='%2334c48a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  /* Set the theme before first paint, so there's no flash of the wrong one. */
+  (function(){
+    try{
+      var stored = localStorage.getItem('patternize-theme');
+      var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
+    }catch(e){ document.documentElement.setAttribute('data-theme','dark'); }
+  })();
+</script>
 <style>
-  :root{
-    --bg:#1a1b20;
-    --shadow-dark:#0e0e11;
-    --shadow-light:#272930;
-    --ink:#F1F2F5;
-    --muted2:#9096A1;
-    --accent:#34C48A;
-    --max:1160px;
-    --nav-h:72px;
-    --r-lg:28px;
-    --r-md:20px;
-    --r-sm:14px;
+/* ==========================================================================
+   PATTERNIZE — pure neumorphism
+   One flat surface, one light source (top-left). Every element is either
+   raised out of the board (drop shadow) or pressed into it (inner shadow).
+   No borders, no gradients beyond the material itself, no texture.
+   ========================================================================== */
+:root{
+  --bg:#2b2f37;
+  --shadow-dark:#1e2126;
+  --shadow-light:#383d47;
+  --ink:#eef0f4;
+  --muted:#9aa0ac;
+  --faint:#6d7480;
+  --accent:#34c48a;
+  --warn:#e2725c;
 
-    /* One light source (top-left) drives every surface on the page.
-       Raised = convex, sits out of the board. Pressed = concave, sits into it. */
-    --convex:linear-gradient(145deg,#1d1e24,#17181c);
-    --concave:linear-gradient(145deg,#15161a,#1d1e24);
+  --max:1140px;
+  --nav-h:76px;
+  --r-lg:28px;
+  --r-md:20px;
+  --r-sm:14px;
 
-    --raise-lg:14px 14px 30px var(--shadow-dark), -14px -14px 30px var(--shadow-light);
-    --raise-md:8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light);
-    --raise-sm:4px 4px 9px var(--shadow-dark), -4px -4px 9px var(--shadow-light);
-    --press-lg:inset 10px 10px 20px var(--shadow-dark), inset -10px -10px 20px var(--shadow-light);
-    --press-md:inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
-    --press-sm:inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
-  }
+  --raise-lg:12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+  --raise-md:8px 8px 17px var(--shadow-dark), -8px -8px 17px var(--shadow-light);
+  --raise-sm:4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+  --press-lg:inset 9px 9px 18px var(--shadow-dark), inset -9px -9px 18px var(--shadow-light);
+  --press-md:inset 6px 6px 13px var(--shadow-dark), inset -6px -6px 13px var(--shadow-light);
+  --press-sm:inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
+}
+html[data-theme="light"]{
+  --bg:#e9ecf1;
+  --shadow-dark:#c3c8d2;
+  --shadow-light:#ffffff;
+  --ink:#20242e;
+  --muted:#5b6272;
+  --faint:#868da0;
+  --accent:#1f9d6f;
+  --warn:#c1503b;
+}
 
-  *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  @media (prefers-reduced-motion: reduce){
-    html{ scroll-behavior:auto; }
-    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
-  }
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+}
 
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size:16px;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3{
-    font-family:'Space Grotesk','Inter',sans-serif;
-    margin:0; line-height:1.14; letter-spacing:-0.01em; font-weight:600; color:var(--ink);
-  }
-  p{ margin:0; }
-  a{ color:inherit; text-decoration:none; }
-  img,svg{ display:block; max-width:100%; }
-  button{ font-family:inherit; }
-  a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  transition:background .3s ease, color .3s ease;
+}
 
-  .wrap{ max-width:var(--max); margin:0 auto; padding:0 32px; }
+h1,h2,h3{ font-family:'Poppins','Inter',sans-serif; margin:0; line-height:1.16; letter-spacing:-.018em; font-weight:600; }
+p{ margin:0; }
+a{ color:inherit; text-decoration:none; }
+svg{ display:block; }
+button{ font-family:inherit; }
+a:focus-visible,button:focus-visible{ outline:2px solid var(--accent); outline-offset:4px; border-radius:8px; }
 
-  /* ============================================================
-     Neumorphic surfaces — same material as the board, shaped only
-     by light. Raised surfaces are convex; wells are concave.
-  ============================================================ */
-  .neu{ background:var(--convex); border-radius:var(--r-lg); box-shadow:var(--raise-lg); }
-  .neu-sm{ background:var(--convex); border-radius:var(--r-md); box-shadow:var(--raise-sm); }
-  .neu-inset{ background:var(--concave); border-radius:var(--r-md); box-shadow:var(--press-md); }
-  .neu-pill{ background:var(--convex); border-radius:999px; box-shadow:var(--raise-md); }
+.wrap{ max-width:var(--max); margin:0 auto; padding:0 30px; }
+.mono{ font-family:'JetBrains Mono',monospace; }
 
-  .btn{
-    display:inline-flex; align-items:center; gap:10px;
-    padding:14px 26px;
-    border-radius:16px;
-    font-size:0.93rem; font-weight:600;
-    border:none; cursor:pointer;
-    color:var(--ink);
-    background:var(--convex);
-    box-shadow:var(--raise-md);
-    transition:box-shadow .18s ease, background .18s ease, color .18s ease;
-  }
-  .btn:hover{ color:#fff; box-shadow:10px 10px 22px var(--shadow-dark), -10px -10px 22px var(--shadow-light); }
-  .btn:active{ background:var(--concave); box-shadow:var(--press-sm); }
-  .dot-ic{ width:8px; height:8px; border-radius:50%; background:var(--muted2); flex-shrink:0; }
-  .btn-primary .dot-ic{ background:var(--accent); box-shadow:0 0 8px rgba(52,196,138,.55); }
+/* ---------- surfaces ---------- */
+.raised{ background:var(--bg); border-radius:var(--r-lg); box-shadow:var(--raise-lg); }
+.raised-md{ background:var(--bg); border-radius:var(--r-md); box-shadow:var(--raise-md); }
+.raised-sm{ background:var(--bg); border-radius:var(--r-sm); box-shadow:var(--raise-sm); }
+.sunken{ background:var(--bg); border-radius:var(--r-md); box-shadow:var(--press-md); }
+.sunken-lg{ background:var(--bg); border-radius:var(--r-lg); box-shadow:var(--press-lg); }
+.pill{ background:var(--bg); border-radius:999px; box-shadow:var(--raise-md); }
 
-  /* ---------- Nav ---------- */
-  header.site-nav{ position:sticky; top:16px; z-index:40; padding:0 16px; }
-  .nav-shell{
-    max-width:var(--max); margin:0 auto;
-    display:flex; align-items:center; justify-content:space-between;
-    height:var(--nav-h); padding:0 14px 0 14px;
-  }
-  .brand{
-    display:flex; align-items:center; gap:12px;
-    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.05rem;
-  }
-  .mark-well{
-    width:42px; height:42px; border-radius:14px;
-    display:flex; align-items:center; justify-content:center;
-    background:var(--concave); box-shadow:var(--press-sm);
-    flex-shrink:0;
-  }
-  .mark-well svg{ width:26px; height:26px; }
+.btn{
+  display:inline-flex; align-items:center; gap:11px;
+  padding:15px 27px; border-radius:17px; border:none; cursor:pointer;
+  font-size:.93rem; font-weight:600; letter-spacing:-.005em; color:var(--ink);
+  background:var(--bg); box-shadow:var(--raise-md);
+  transition:box-shadow .2s ease, color .2s ease;
+}
+.btn:hover{ box-shadow:var(--raise-lg); }
+.btn:active{ box-shadow:var(--press-sm); }
+.led{ width:8px; height:8px; border-radius:50%; background:var(--faint); flex-shrink:0; }
+.btn-primary .led{ background:var(--accent); }
 
-  nav.links{ display:flex; align-items:center; gap:6px; padding:6px; border-radius:999px; box-shadow:var(--press-sm); }
-  nav.links a{
-    color:var(--muted2); font-size:0.9rem; font-weight:500;
-    padding:9px 18px; border-radius:999px;
-    transition:color .15s ease, box-shadow .15s ease, background .15s ease;
-  }
-  nav.links a:hover{ color:var(--ink); }
-  nav.links a.is-active{ color:var(--ink); background:var(--convex); box-shadow:var(--raise-sm); }
+/* ---------- nav ---------- */
+header.site-nav{ position:sticky; top:16px; z-index:50; padding:0 18px; }
+.nav-shell{
+  max-width:var(--max); margin:0 auto; height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between; padding:0 14px;
+}
+.brand{ display:flex; align-items:center; gap:13px; }
+.mark{ width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center; background:var(--bg); box-shadow:var(--press-sm); flex-shrink:0; }
+.mark svg{ width:25px; height:25px; }
+.mark .fan{ stroke:var(--ink); }
+.mark .dot{ fill:var(--accent); }
+.brand-name{ font-family:'Poppins',sans-serif; font-weight:600; font-size:1.06rem; letter-spacing:-.02em; }
 
-  .nav-cta{ display:flex; align-items:center; gap:12px; }
-  .menu-toggle{
-    display:none; width:44px; height:44px; align-items:center; justify-content:center;
-    background:var(--convex); border:none; border-radius:14px; box-shadow:var(--raise-sm); cursor:pointer;
-  }
-  .menu-toggle:active{ background:var(--concave); box-shadow:var(--press-sm); }
-  .menu-toggle span{ display:block; width:16px; height:2px; background:var(--ink); margin:3px auto; border-radius:2px; }
+nav.links{ display:flex; align-items:center; gap:4px; padding:6px; border-radius:999px; background:var(--bg); box-shadow:var(--press-sm); }
+nav.links a{ color:var(--muted); font-size:.89rem; font-weight:500; padding:9px 17px; border-radius:999px; transition:color .18s ease, box-shadow .2s ease; }
+nav.links a:hover{ color:var(--ink); }
+nav.links a.is-active{ color:var(--ink); background:var(--bg); box-shadow:var(--raise-sm); }
 
-  /* ---------- Hero ---------- */
-  .hero{ padding:60px 0 40px; }
-  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:48px; align-items:center; }
-  .status-chip{
-    display:inline-flex; align-items:center; gap:10px;
-    padding:10px 18px 10px 14px; border-radius:999px;
-    font-size:0.85rem; color:var(--muted2); margin-bottom:26px;
-    box-shadow:var(--press-sm);
-  }
-  .status-chip .pulse{ position:relative; width:8px; height:8px; border-radius:50%; background:var(--accent); }
-  .status-chip .pulse::after{
-    content:""; position:absolute; inset:-5px; border-radius:50%;
-    border:1px solid var(--accent); opacity:.55; animation:pulse-ring 2.4s ease-out infinite;
-  }
-  @keyframes pulse-ring{ 0%{ transform:scale(.7); opacity:.6; } 100%{ transform:scale(2.1); opacity:0; } }
+.nav-cta{ display:flex; align-items:center; gap:10px; }
+.icon-btn{
+  width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  border:none; border-radius:14px; background:var(--bg); box-shadow:var(--raise-sm); cursor:pointer; color:var(--muted);
+  transition:box-shadow .2s ease, color .2s ease;
+}
+.icon-btn:hover{ color:var(--ink); }
+.icon-btn:active{ box-shadow:var(--press-sm); }
+.icon-btn svg{ width:19px; height:19px; }
+.icon-btn .moon{ display:none; }
+html[data-theme="light"] .icon-btn .sun{ display:none; }
+html[data-theme="light"] .icon-btn .moon{ display:block; }
 
-  .hero h1{ font-size:clamp(2.1rem,4vw,3.05rem); max-width:15ch; }
-  .hero p.lead{ margin-top:20px; font-size:1.05rem; color:var(--muted2); max-width:46ch; }
-  .hero-actions{ margin-top:32px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
-  .hero-foot{ margin-top:26px; font-size:.85rem; color:var(--muted2); opacity:.85; }
+.menu-toggle{ display:none; }
+.menu-toggle span{ display:block; width:16px; height:2px; background:var(--ink); margin:3px auto; border-radius:2px; }
 
-  /* Raised disc with a concave well pressed into it */
-  .hero-visual{
-    position:relative; width:100%; aspect-ratio:1/1; max-width:480px; margin-left:auto;
-    border-radius:50%; padding:22px;
-    background:var(--convex); box-shadow:var(--raise-lg);
-  }
-  .hero-visual .well{
-    position:relative; width:100%; height:100%; border-radius:50%; overflow:hidden;
-    background:var(--concave); box-shadow:var(--press-lg);
-  }
-  .hero-visual svg{ width:100%; height:100%; }
-  .hero-visual .caption{
-    position:absolute; bottom:12%; left:50%; transform:translateX(-50%);
-    font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--muted2);
-    white-space:nowrap; text-align:center;
-  }
-  #fanBaseLines line{ transition:opacity .3s ease; opacity:0; }
-  @media (max-width:980px){
-    .hero-grid{ grid-template-columns:1fr; }
-    .hero-visual{ margin:20px auto 0; max-width:360px; }
-  }
+/* ---------- hero ---------- */
+.hero{ padding:64px 0 34px; }
+.hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:52px; align-items:center; }
+.chip{
+  display:inline-flex; align-items:center; gap:11px; padding:10px 19px 10px 15px;
+  border-radius:999px; font-size:.84rem; color:var(--muted);
+  background:var(--bg); box-shadow:var(--press-sm); margin-bottom:28px;
+}
+.chip .pulse{ position:relative; width:8px; height:8px; border-radius:50%; background:var(--accent); }
+.chip .pulse::after{ content:""; position:absolute; inset:-5px; border-radius:50%; border:1px solid var(--accent); opacity:.5; animation:ring 2.6s ease-out infinite; }
+@keyframes ring{ 0%{ transform:scale(.65); opacity:.55; } 100%{ transform:scale(2.2); opacity:0; } }
 
-  /* ---------- Sections ---------- */
-  section{ padding:84px 0; }
-  .section-head{ max-width:600px; margin-bottom:48px; }
-  .section-head h2{ font-size:clamp(1.5rem,2.6vw,1.95rem); }
-  .section-head p{ margin-top:14px; color:var(--muted2); font-size:1.01rem; max-width:52ch; }
+.hero h1{ font-size:clamp(2.1rem,4vw,3.05rem); max-width:16ch; font-weight:600; }
+.hero .lead{ margin-top:22px; font-size:1.05rem; color:var(--muted); max-width:48ch; }
+.hero-actions{ margin-top:34px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.hero-foot{ margin-top:28px; font-size:.84rem; color:var(--faint); max-width:44ch; }
 
-  .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
-  .feature-card{ padding:30px; }
-  .feature-card .icon{
-    width:46px; height:46px; margin-bottom:20px; border-radius:16px;
-    display:flex; align-items:center; justify-content:center;
-    background:var(--concave); box-shadow:var(--press-sm);
-  }
-  .feature-card .icon svg{ width:20px; height:20px; }
-  .feature-card h3{ font-size:1.05rem; }
-  .feature-card .kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--accent); display:block; margin-bottom:10px; }
-  .feature-card p{ margin-top:10px; color:var(--muted2); font-size:.94rem; }
-  .feature-card ul{ margin:16px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
-  .feature-card li{ font-size:.85rem; color:var(--muted2); display:flex; align-items:baseline; gap:10px; }
-  .feature-card li::before{
-    content:""; width:5px; height:5px; border-radius:50%; flex-shrink:0; transform:translateY(-2px);
-    background:var(--concave); box-shadow:inset 1px 1px 2px var(--shadow-dark), inset -1px -1px 2px var(--shadow-light);
-  }
-  @media (max-width:920px){ .feature-grid{ grid-template-columns:1fr; } }
+.logo-stage{ padding:22px; }
+.logo-plate{ aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; padding:14%; }
+.logo-plate svg{ width:100%; height:100%; }
+.logo-plate .fan line{ stroke:var(--ink); opacity:0; }
+.logo-plate .fan.lit line{ opacity:.85; }
+.logo-plate .dot{ fill:var(--accent); }
 
-  .philosophy{ display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:start; }
-  .philosophy h2{ font-size:clamp(1.5rem,2.6vw,2rem); max-width:13ch; }
-  .philosophy .lede{ margin-top:18px; color:var(--muted2); font-size:1.02rem; max-width:38ch; }
-  .pipeline{ display:flex; flex-direction:column; padding:14px 30px; }
-  .pipeline .row{ display:grid; grid-template-columns:auto 1fr; gap:20px; padding:22px 0; align-items:start; }
-  /* grooves instead of flat lines: a dark cut with a light lip beneath it */
-  .pipeline .row + .row, .visit-row + .visit-row{
-    border-top:1px solid var(--shadow-dark);
-    box-shadow:inset 0 1px 0 var(--shadow-light);
-  }
-  .pipeline .node{
-    width:38px; height:38px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--muted2);
-    background:var(--concave); box-shadow:var(--press-sm);
-  }
-  .pipeline .row.is-doctor .node{ color:var(--accent); }
-  .pipeline h3{ font-size:.98rem; }
-  .pipeline p{ margin-top:6px; color:var(--muted2); font-size:.9rem; max-width:48ch; }
-  @media (max-width:900px){ .philosophy{ grid-template-columns:1fr; } }
+@media (max-width:980px){
+  .hero-grid{ grid-template-columns:1fr; gap:38px; }
+  .logo-stage{ max-width:340px; margin:0 auto; }
+}
 
-  .pattern-panel{ padding:10px; }
-  .pattern-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .pattern-visits{ padding:34px; }
-  .visit-tabs{ display:flex; gap:12px; margin-bottom:22px; }
-  .visit-tab{ font-family:'JetBrains Mono',monospace; font-size:.76rem; padding:9px 15px; color:var(--muted2); border-radius:12px; }
-  .visit-tab.is-active{ color:var(--ink); background:var(--concave); box-shadow:var(--press-sm); }
-  .visit-row{ display:flex; justify-content:space-between; align-items:baseline; padding:14px 0; font-size:.92rem; }
-  .visit-row .label{ color:var(--muted2); }
-  .visit-row .value{ font-family:'JetBrains Mono',monospace; font-size:.88rem; }
-  .visit-row .value.delta-up{ color:var(--accent); }
-  .pattern-visual{
-    display:flex; align-items:center; justify-content:center; padding:24px;
-    border-radius:var(--r-md); background:var(--concave); box-shadow:var(--press-lg);
+/* ---------- sections ---------- */
+section{ padding:86px 0; }
+.section-head{ max-width:640px; margin-bottom:50px; }
+.section-head h2{ font-size:clamp(1.55rem,2.7vw,2.05rem); }
+.section-head p{ margin-top:16px; color:var(--muted); font-size:1.01rem; max-width:56ch; }
+.eyebrow{ font-family:'JetBrains Mono',monospace; font-size:.71rem; letter-spacing:.14em; color:var(--accent); display:block; margin-bottom:14px; }
+
+.grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
+.card{ padding:28px 26px 30px; display:flex; flex-direction:column; }
+.card .icon{ width:48px; height:48px; margin-bottom:20px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:var(--bg); box-shadow:var(--press-sm); flex-shrink:0; }
+.card .icon svg{ width:20px; height:20px; }
+.card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.badge{ font-family:'JetBrains Mono',monospace; font-size:.66rem; letter-spacing:.06em; color:var(--faint); padding:5px 10px; border-radius:999px; background:var(--bg); box-shadow:var(--press-sm); white-space:nowrap; }
+.card h3{ font-size:1.02rem; font-weight:600; margin-top:6px; }
+.card p{ margin-top:11px; color:var(--muted); font-size:.9rem; }
+.card ul{ margin:18px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px; flex-grow:1; }
+.card li{ font-size:.83rem; color:var(--muted); display:flex; align-items:baseline; gap:10px; }
+.card li::before{ content:""; width:6px; height:6px; border-radius:50%; flex-shrink:0; transform:translateY(-1px); background:var(--bg); box-shadow:var(--press-sm); }
+.measure-note{ margin-top:34px; padding:20px 26px; font-size:.9rem; color:var(--muted); text-align:center; }
+.measure-note b{ color:var(--ink); font-weight:600; }
+@media (max-width:980px){ .grid-4{ grid-template-columns:1fr 1fr; } }
+@media (max-width:620px){ .grid-4{ grid-template-columns:1fr; } }
+
+/* ---------- session charts ---------- */
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.chart-card{ padding:26px 24px 22px; display:flex; flex-direction:column; gap:16px; }
+.chart-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.chart-head h3{ font-size:.98rem; font-weight:600; margin-top:5px; }
+.trend-badge{ font-family:'JetBrains Mono',monospace; font-size:.66rem; letter-spacing:.02em; padding:6px 10px; border-radius:999px; white-space:nowrap; background:var(--bg); box-shadow:var(--press-sm); flex-shrink:0; }
+.trend-badge.good{ color:var(--accent); }
+.trend-badge.warn{ color:var(--warn); }
+.trend-badge.neutral{ color:var(--muted); }
+.chart-well{ padding:16px 6px 4px; }
+.chart-well svg{ width:100%; height:auto; display:block; }
+.chart-foot{ display:flex; justify-content:space-between; gap:10px; font-size:.76rem; color:var(--faint); font-family:'JetBrains Mono',monospace; }
+@media (max-width:980px){ .grid-3{ grid-template-columns:1fr; } }
+
+/* ---------- approach ---------- */
+.approach-grid{ display:grid; grid-template-columns:.86fr 1.14fr; gap:58px; align-items:start; }
+.approach-grid h2{ font-size:clamp(1.55rem,2.7vw,2.05rem); max-width:13ch; }
+.approach-grid .lede{ margin-top:19px; color:var(--muted); font-size:1.01rem; max-width:38ch; }
+.approach-note{ margin-top:26px; padding:18px 20px; font-size:.86rem; color:var(--faint); max-width:38ch; }
+.pipeline{ padding:12px 32px; }
+.pipeline .row{ display:grid; grid-template-columns:auto 1fr; gap:22px; padding:24px 0; align-items:start; }
+.pipeline .row + .row{ border-top:1px solid var(--shadow-dark); box-shadow:inset 0 1px 0 var(--shadow-light); }
+.pipeline .node{
+  width:40px; height:40px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--faint);
+  background:var(--bg); box-shadow:var(--press-sm);
+}
+.pipeline .row.is-you .node{ color:var(--accent); }
+.pipeline h3{ font-size:.99rem; font-weight:600; }
+.pipeline p{ margin-top:7px; color:var(--muted); font-size:.9rem; max-width:48ch; }
+@media (max-width:900px){ .approach-grid{ grid-template-columns:1fr; gap:34px; } }
+
+/* ---------- longitudinal panel ---------- */
+.panel{ padding:12px; }
+.panel-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.visits{ padding:34px 32px; }
+.visit-tabs{ display:flex; gap:8px; padding:6px; border-radius:16px; background:var(--bg); box-shadow:var(--press-sm); margin-bottom:24px; width:fit-content; }
+.visit-tab{
+  font-family:'JetBrains Mono',monospace; font-size:.74rem; padding:10px 16px; border-radius:11px;
+  color:var(--faint); background:transparent; box-shadow:none; cursor:pointer;
+  border:none; transition:color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.visit-tab.is-active{ color:var(--ink); background:var(--bg); box-shadow:var(--raise-sm); }
+.visit-row{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:14px 0; font-size:.9rem; }
+.visit-row + .visit-row{ border-top:1px solid var(--shadow-dark); box-shadow:inset 0 1px 0 var(--shadow-light); }
+.visit-row .label{ color:var(--muted); }
+.visit-row .value{ font-family:'JetBrains Mono',monospace; font-size:.86rem; white-space:nowrap; }
+.visit-row .value.good{ color:var(--accent); }
+.visit-note{ margin-top:20px; font-size:.76rem; color:var(--faint); }
+.panel-visual{ display:flex; align-items:center; justify-content:center; padding:26px; }
+.panel-visual svg{ width:100%; max-width:340px; height:auto; }
+@media (max-width:820px){ .panel-grid{ grid-template-columns:1fr; } .panel-visual{ order:-1; } }
+
+/* ---------- signals strip ---------- */
+.signals{ padding:30px 0 0; }
+.signals-shell{ padding:26px 30px; display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.signals-label{ font-size:.83rem; color:var(--faint); flex-shrink:0; }
+.signals-items{ display:flex; gap:14px; flex-wrap:wrap; }
+.tag{ display:flex; align-items:center; gap:10px; padding:11px 17px; border-radius:15px; font-size:.845rem; font-weight:500; background:var(--bg); box-shadow:var(--raise-sm); color:var(--ink); }
+.tag.tag-soon{ color:var(--faint); }
+.tag .led{ width:6px; height:6px; }
+
+/* ---------- cta ---------- */
+.cta-outer{ padding:26px 0 96px; }
+.cta{ padding:60px 48px; display:flex; align-items:center; justify-content:space-between; gap:38px; flex-wrap:wrap; }
+.cta h2{ font-size:clamp(1.5rem,2.6vw,1.9rem); max-width:18ch; }
+.cta p{ margin-top:14px; color:var(--muted); max-width:44ch; font-size:.97rem; }
+@media (max-width:720px){ .cta{ padding:44px 28px; } }
+
+/* ---------- footer ---------- */
+footer{ padding:0 0 52px; }
+.footer-shell{ padding:38px 40px; }
+.footer-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:26px; flex-wrap:wrap; }
+footer .tag-line{ margin-top:14px; max-width:34ch; font-size:.88rem; color:var(--muted); }
+footer nav{ display:flex; gap:24px; font-size:.87rem; }
+footer nav a{ color:var(--muted); transition:color .18s ease; }
+footer nav a:hover{ color:var(--ink); }
+.fine{ margin-top:32px; padding-top:22px; border-top:1px solid var(--shadow-dark); box-shadow:inset 0 1px 0 var(--shadow-light); font-size:.78rem; color:var(--faint); max-width:78ch; }
+
+@media (max-width:860px){
+  nav.links{
+    position:absolute; top:calc(var(--nav-h) + 14px); left:18px; right:18px;
+    flex-direction:column; align-items:stretch; gap:4px; padding:12px;
+    border-radius:var(--r-md); background:var(--bg); box-shadow:var(--raise-md); display:none;
   }
-  .pattern-visual svg{ width:100%; max-width:340px; height:auto; }
-  @media (max-width:820px){ .pattern-grid{ grid-template-columns:1fr; } .pattern-visual{ order:-1; } }
-
-  .signals{ padding:36px 0; }
-  .signals-shell{ padding:24px 28px; border-radius:var(--r-lg); box-shadow:var(--press-lg); display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
-  .signals-label{ font-size:.85rem; color:var(--muted2); flex-shrink:0; }
-  .signals-items{ display:flex; gap:16px; flex-wrap:wrap; }
-  .signal-tag{ padding:10px 16px; font-size:.85rem; display:flex; align-items:center; gap:9px; border-radius:14px; }
-  .signal-tag .dot-ic{ width:6px; height:6px; }
-  .signal-tag b{ font-weight:600; color:var(--ink); }
-
-  .cta-band-outer{ padding:20px 0 100px; }
-  .cta-band{ position:relative; overflow:hidden; padding:64px 48px; display:flex; align-items:center; justify-content:space-between; gap:36px; flex-wrap:wrap; }
-  .cta-band .echo{ position:absolute; right:-40px; top:-60px; width:340px; height:340px; opacity:.5; pointer-events:none; }
-  .cta-band h2{ font-size:clamp(1.5rem,2.6vw,1.85rem); max-width:17ch; position:relative; }
-  .cta-band p{ margin-top:12px; color:var(--muted2); max-width:42ch; position:relative; }
-  .cta-band .btn{ position:relative; }
-  @media (max-width:720px){
-    .cta-band{ padding:44px 28px; }
-    .cta-band .echo{ width:220px; height:220px; right:-30px; top:-30px; }
-  }
-
-  footer{ padding:8px 0 48px; }
-  .footer-shell{ padding:36px 40px; }
-  .footer-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap; }
-  footer p.tag{ margin-top:12px; max-width:36ch; font-size:.9rem; color:var(--muted2); }
-  footer nav{ display:flex; gap:22px; font-size:.88rem; }
-  footer nav a{ color:var(--muted2); }
-  footer nav a:hover{ color:var(--ink); }
-  footer .fine{ margin-top:34px; font-size:.79rem; color:var(--muted2); opacity:.65; max-width:70ch; }
-
-  @media (max-width:840px){
-    nav.links{
-      position:absolute; top:calc(var(--nav-h) + 12px); left:16px; right:16px;
-      flex-direction:column; align-items:stretch; gap:4px; padding:12px; border-radius:var(--r-md);
-      background:var(--convex); box-shadow:var(--raise-md); display:none;
-    }
-    nav.links.open{ display:flex; }
-    nav.links a{ padding:12px 16px; border-radius:12px; }
-    .menu-toggle{ display:flex; }
-    .nav-cta a.btn:not(.menu-toggle){ display:none; }
-  }
+  nav.links.open{ display:flex; }
+  nav.links a{ padding:13px 17px; border-radius:11px; }
+  .menu-toggle{ display:flex; width:44px; height:44px; align-items:center; justify-content:center; border:none; border-radius:14px; background:var(--bg); box-shadow:var(--raise-sm); cursor:pointer; }
+  .menu-toggle:active{ box-shadow:var(--press-sm); }
+  .nav-cta .btn{ display:none; }
+  section{ padding:64px 0; }
+}
 </style>
 </head>
 <body>
 
 <header class="site-nav">
-  <div class="nav-shell neu-pill">
-    <a class="brand" href="#top">
-      <span class="mark-well">
+  <div class="nav-shell pill">
+    <a class="brand" href="#top" aria-label="Patternize home">
+      <span class="mark">
         <svg viewBox="0 0 64 64" aria-hidden="true">
-          <g stroke="#E7E9EE" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85">
-            <line x1="16" y1="48" x2="47" y2="45"/><line x1="16" y1="48" x2="48" y2="38"/><line x1="16" y1="48" x2="47" y2="29"/><line x1="16" y1="48" x2="44" y2="19"/><line x1="16" y1="48" x2="38" y2="11"/>
-          </g>
-          <circle cx="16" cy="48" r="4.4" fill="#34C48A"/>
+          <g class="fan" data-ax="16" data-ay="48" data-x2="52" data-ytop="12" data-count="9" stroke-width="1.5" stroke-linecap="round" fill="none"></g>
+          <circle class="dot" cx="16" cy="48" r="4"/>
         </svg>
       </span>
-      Patternize
+      <span class="brand-name">Patternize</span>
     </a>
 
-    <nav class="links neu-inset" id="primary-nav">
+    <nav class="links" id="primary-nav">
       <a href="#overview">Overview</a>
-      <a href="#measurements">Measurements</a>
+      <a href="#measurements">What we measure</a>
       <a href="#approach">Approach</a>
-      <a href="#pattern">Longitudinal view</a>
+      <a href="#pattern">Over time</a>
+      <a href="#progress">Session charts</a>
     </nav>
 
     <div class="nav-cta">
-      <a class="btn btn-primary" href="#access"><span class="dot-ic"></span> Request early access</a>
-      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation menu">
+      <button class="icon-btn" id="themeToggle" aria-label="Switch between light and dark" aria-pressed="false">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.3M12 19.2v2.3M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.5 12h2.3M19.2 12h2.3M4.4 19.6L6 18M18 6l1.6-1.6"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.7 6.7 0 0 0 10.3 10.3Z"/></svg>
+      </button>
+      <a class="btn btn-primary" href="#access"><span class="led"></span> Request clinic access</a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -306,152 +325,184 @@
 
 <main id="top">
 
+  <!-- ================= HERO ================= -->
   <section class="hero" id="overview">
     <div class="wrap hero-grid">
       <div>
-        <div class="status-chip neu-inset">
+        <div class="chip">
           <span class="pulse"></span>
-          Built for neurology clinics — now onboarding pilot sites
+          Onboarding a first group of neurology clinics
         </div>
-        <h1>Every exam leaves a pattern. Patternize is how you keep following it.</h1>
-        <p class="lead">A standardized cognitive task, a finger-to-nose test, an EEG recording — each already tells you something. Patternize turns them into one quantified, patient-specific record you can compare visit over visit, without changing how you examine a patient.</p>
+
+        <h1>Everything measurable about brain function, in one growing record.</h1>
+
+        <p class="lead">A camera can pick up more than a note in a chart ever holds. Patternize watches the exam — movement, facial expression, an EEG recording, a cognitive test — and turns each into a precise, comparable measurement attached to the patient, visit after visit.</p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#access"><span class="dot-ic"></span> Request early access</a>
-          <a class="btn" href="#approach">See how it's built</a>
+          <a class="btn btn-primary" href="#access"><span class="led"></span> Request clinic access</a>
+          <a class="btn" href="#measurements">See what it captures</a>
         </div>
-        <p class="hero-foot">In development with practicing neurologists. Not a diagnostic device, and not yet available for clinical use.</p>
+
+        <p class="hero-foot">Developed with practicing neurologists. Not a diagnostic device, and not yet available for clinical use.</p>
       </div>
 
-      <div class="hero-visual" id="heroVisual">
-        <div class="well">
-          <svg id="fanSvg" viewBox="0 0 520 520" role="img" aria-label="Patternize mark: cognition, movement, and neural signal lines converging into a single tracked point">
-            <g id="fanBaseLines" stroke="rgba(231,233,238,0.55)" fill="none" stroke-linecap="round"></g>
-            <circle id="fanDot" r="7.5" fill="#34C48A"/>
+      <div class="logo-stage raised">
+        <div class="logo-plate sunken-lg">
+          <svg viewBox="0 0 400 400" role="img" aria-label="Patternize mark">
+            <g class="fan" id="heroFan" data-ax="66" data-ay="332" data-x2="336" data-ytop="40" data-count="19" stroke-width="2.2" stroke-linecap="round" fill="none"></g>
+            <circle class="dot" cx="66" cy="332" r="10"/>
           </svg>
-          <p class="caption">cognition · movement · EEG → one point</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ================= MEASUREMENTS ================= -->
   <section class="measurements" id="measurements">
     <div class="wrap">
       <div class="section-head">
-        <h2>Three families of signal, read the same way every time</h2>
-        <p>A clinical exam already produces this information. Patternize doesn't replace the exam — it captures it more precisely, and keeps every reading attached to the patient it came from.</p>
+        <span class="eyebrow">WHAT WE MEASURE</span>
+        <h2>If it's a signal of brain function, it belongs in the record</h2>
+        <p>Each of these runs today, inside the same patient record. The list is meant to grow — every new signal is added the same way the first ones were: validated, then attached to the pattern you're already tracking.</p>
       </div>
 
-      <div class="feature-grid">
-        <div class="feature-card neu">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l1.5-7 3.5 16 2.5-11 1.5 2h6.5" stroke="#F1F2F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="kicker">COGNITION</span>
-          <h3>Assessments a patient can complete alone</h3>
-          <p>Starting with Mini-Cog: three-word recall and a clock drawing, guided by the app and scored on the standard 0–5 scale — no instructor needs to be in the room.</p>
+      <div class="grid-4">
+        <div class="card raised">
+          <div class="card-top">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="14" height="12" rx="2.4" stroke="#eef0f4" stroke-width="1.8"/><path d="M16.5 10.2l5-2.9v9.4l-5-2.9" stroke="#eef0f4" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          </div>
+          <h3>Camera — movement &amp; expression</h3>
+          <p>An ordinary webcam, turned into a measuring instrument: finger-to-nose and gait tracked in three dimensions, facial expression and asymmetry scored the same way, every visit.</p>
           <ul>
-            <li>Response timing and pauses</li>
-            <li>Drawing trajectory and corrections</li>
-            <li>Local speech recognition, including Persian prompts</li>
+            <li>Trajectory, tremor, endpoint error</li>
+            <li>Facial asymmetry &amp; expression dynamics</li>
+            <li>Anything else the camera can resolve, added as it's validated</li>
           </ul>
         </div>
-        <div class="feature-card neu">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="3" stroke="#F1F2F5" stroke-width="2"/><path d="M5 21c1-4 4-6 7-6s6 2 7 6" stroke="#F1F2F5" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <span class="kicker">MOVEMENT</span>
-          <h3>The camera as a measuring instrument</h3>
-          <p>Finger-to-nose and related motor tests, tracked through the webcam and turned into figures instead of an impression of "looks a little off."</p>
+
+        <div class="card raised">
+          <div class="card-top">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M2.5 12c2-5.5 4-5.5 5 0s3 5.5 5 0 3-5.5 5 0 2.4 3.4 4 3.4" stroke="#eef0f4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+          <h3>EEG — read visually</h3>
+          <p>A recording rendered as a topographic map and band-power breakdown, so it's something you scan in a glance, not something you page through trace by trace.</p>
           <ul>
-            <li>Trajectory, velocity, and endpoint error</li>
-            <li>Tremor and movement smoothness</li>
-            <li>Left/right asymmetry across visits</li>
+            <li>Frequency-band power over time</li>
+            <li>Scalp topography &amp; hemispheric symmetry</li>
+            <li>Change measured against the patient's own baseline</li>
           </ul>
         </div>
-        <div class="feature-card neu">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12c2-5 4-5 5 0s3 5 5 0 3-5 5 0 3 3 3 3" stroke="#F1F2F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="kicker">NEURAL ACTIVITY</span>
-          <h3>EEG, read at a glance</h3>
-          <p>Spectral and spatial features shown as a readable topomap next to the rest of the panel — built to be scientifically meaningful without being a wall of traces.</p>
+
+        <div class="card raised">
+          <div class="card-top">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l1.6-7 3.4 15.5L13.6 10 15 12h7" stroke="#eef0f4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+          <h3>Cognitive testing</h3>
+          <p>Standardized tasks like Mini-Cog, administered and scored automatically — the validated clinical score, plus the timing and hesitation behind it.</p>
           <ul>
-            <li>Frequency-band activity over time</li>
-            <li>Spatial distribution and connectivity</li>
-            <li>Change against the patient's own baseline</li>
+            <li>Guided, standardized administration</li>
+            <li>Automatic scoring against the clinical scale</li>
+            <li>Response latency, not just the final result</li>
+          </ul>
+        </div>
+
+        <div class="card raised">
+          <div class="card-top">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="2.5" width="6" height="11" rx="3" stroke="#eef0f4" stroke-width="1.8"/><path d="M5.5 12a6.5 6.5 0 0 0 13 0M12 18.5v3" stroke="#eef0f4" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <span class="badge">IN DEVELOPMENT</span>
+          </div>
+          <h3>Voice — next in line</h3>
+          <p>Speech carries its own markers of brain function. Voice is the next signal joining the record, followed by whatever else proves worth measuring.</p>
+          <ul>
+            <li>Prosody, pacing, articulation</li>
+            <li>Captured inside the same visit record</li>
+            <li>...and more, as each module is validated</li>
           </ul>
         </div>
       </div>
+
+      <p class="measure-note sunken">The direction is a single record for <b>anything measurable about brain function</b> — camera and EEG and cognition today, voice next, and more as the science catches up.</p>
     </div>
   </section>
 
+  <!-- ================= APPROACH ================= -->
   <section class="approach" id="approach">
-    <div class="wrap philosophy">
+    <div class="wrap approach-grid">
       <div>
+        <span class="eyebrow">APPROACH</span>
         <h2>The neurologist stays the neurologist.</h2>
-        <p class="lede">Patternize doesn't score a diagnosis. It gives you a more exact version of what you already look for in an exam, and hands the interpretation back to you.</p>
+        <p class="lede">Patternize doesn't produce a diagnosis or a verdict. It gives a more exact version of what you already look for, and hands the interpretation straight back to you.</p>
+        <p class="approach-note sunken">Every measurement is labeled with how it was obtained, so you can see what a number rests on before you trust it.</p>
       </div>
 
-      <div class="pipeline neu">
+      <div class="pipeline raised">
         <div class="row">
           <div class="node">1</div>
           <div>
-            <h3>Patient performs a standardized assessment</h3>
-            <p>Mini-Cog, finger-to-nose, an EEG recording — the same task you'd already ask for, administered through the app.</p>
+            <h3>The patient performs a standardized assessment</h3>
+            <p>The same task you would already request — administered through the app, in the same way every time.</p>
           </div>
         </div>
         <div class="row">
           <div class="node">2</div>
           <div>
-            <h3>Patternize captures the raw signal</h3>
-            <p>Camera, audio, EEG, and interaction timing are recorded alongside the task, without changing how the patient completes it.</p>
+            <h3>The raw signal is captured alongside it</h3>
+            <p>Camera, EEG, and interaction timing are recorded while the task runs, without changing how the patient completes it.</p>
           </div>
         </div>
         <div class="row">
           <div class="node">3</div>
           <div>
-            <h3>Raw signal becomes quantified measurement</h3>
-            <p>Timing, trajectory, spectral features, and the validated clinical score are extracted as separate, clearly labeled layers.</p>
+            <h3>Signal becomes quantified measurement</h3>
+            <p>Movement, expression, spectral features, and the validated clinical score are extracted as separate, clearly labeled layers.</p>
           </div>
         </div>
-        <div class="row is-doctor">
+        <div class="row is-you">
           <div class="node">4</div>
           <div>
-            <h3>You interpret the pattern</h3>
-            <p>The dashboard shows this visit next to the last one. What changed, and where, is always your read — Patternize just makes it visible.</p>
+            <h3>You read the pattern</h3>
+            <p>This visit is placed next to the previous ones. What changed, where, and whether it matters remains entirely your call.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ================= LONGITUDINAL ================= -->
   <section class="pattern" id="pattern">
     <div class="wrap">
       <div class="section-head">
+        <span class="eyebrow">OVER TIME</span>
         <h2>Not a score. A trajectory.</h2>
-        <p>A single visit tells you where a patient is. Patternize is built around the visit after that — and the one after that.</p>
+        <p>A single visit tells you where a patient is today. Patternize is built around the visit after that — and the one after that.</p>
       </div>
 
-      <div class="pattern-panel neu">
-        <div class="pattern-grid">
-          <div class="pattern-visits">
-            <div class="visit-tabs">
-              <span class="visit-tab neu-sm is-active">Visit 1</span>
-              <span class="visit-tab neu-sm">Visit 2</span>
-              <span class="visit-tab neu-sm">Visit 3</span>
+      <div class="panel raised">
+        <div class="panel-grid">
+          <div class="visits">
+            <div class="visit-tabs" role="tablist" aria-label="Visits">
+              <button class="visit-tab is-active" role="tab" aria-selected="true" data-visit="1">Visit 1</button>
+              <button class="visit-tab" role="tab" aria-selected="false" data-visit="2">Visit 2</button>
+              <button class="visit-tab" role="tab" aria-selected="false" data-visit="3">Visit 3</button>
             </div>
-            <div class="visit-row"><span class="label">Mini-Cog (clinical score)</span><span class="value">4 / 5</span></div>
-            <div class="visit-row"><span class="label">Finger-to-nose endpoint error</span><span class="value delta-up">↓ 12%</span></div>
-            <div class="visit-row"><span class="label">Movement smoothness</span><span class="value">stable</span></div>
-            <div class="visit-row"><span class="label">EEG baseline deviation</span><span class="value delta-up">↓ 6%</span></div>
+            <div id="visitRows"></div>
+            <p class="visit-note">Illustrative figures — shown to convey the format of the record, not real patient data.</p>
           </div>
-          <div class="pattern-visual">
+
+          <div class="panel-visual sunken-lg">
             <svg viewBox="0 0 360 300" aria-hidden="true">
-              <g stroke="rgba(231,233,238,0.16)" stroke-width="1.3" fill="none" stroke-linecap="round">
-                <line x1="40" y1="260" x2="300" y2="245"/><line x1="40" y1="260" x2="305" y2="205"/><line x1="40" y1="260" x2="300" y2="160"/><line x1="40" y1="260" x2="280" y2="105"/><line x1="40" y1="260" x2="245" y2="55"/><line x1="40" y1="260" x2="180" y2="30"/>
+              <g stroke="var(--shadow-light)" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".8">
+                <line x1="40" y1="262" x2="304" y2="248"/><line x1="40" y1="262" x2="308" y2="208"/>
+                <line x1="40" y1="262" x2="304" y2="164"/><line x1="40" y1="262" x2="284" y2="110"/>
+                <line x1="40" y1="262" x2="248" y2="58"/><line x1="40" y1="262" x2="182" y2="30"/>
               </g>
-              <g stroke="rgba(231,233,238,0.55)" stroke-width="1.6" fill="none" stroke-linecap="round">
-                <line x1="40" y1="260" x2="300" y2="220"/><line x1="40" y1="260" x2="300" y2="170"/><line x1="40" y1="260" x2="270" y2="95"/>
+              <g stroke="var(--muted)" stroke-width="1.8" fill="none" stroke-linecap="round">
+                <line x1="40" y1="262" x2="302" y2="222"/><line x1="40" y1="262" x2="302" y2="172"/><line x1="40" y1="262" x2="272" y2="96"/>
               </g>
-              <circle cx="40" cy="260" r="5.5" fill="#34C48A"/>
-              <circle cx="300" cy="220" r="3" fill="#E7E9EE" opacity="0.5"/>
-              <circle cx="300" cy="170" r="3" fill="#E7E9EE" opacity="0.75"/>
-              <circle cx="270" cy="95" r="3.4" fill="#34C48A"/>
+              <circle cx="40" cy="262" r="5.5" fill="var(--accent)"/>
+              <circle cx="302" cy="222" r="3" fill="var(--muted)" opacity=".6"/>
+              <circle cx="302" cy="172" r="3" fill="var(--muted)" opacity=".85"/>
+              <circle cx="272" cy="96" r="3.6" fill="var(--accent)"/>
             </svg>
           </div>
         </div>
@@ -459,31 +510,92 @@
     </div>
   </section>
 
+  <!-- ================= SESSION CHARTS ================= -->
+  <section class="progress" id="progress">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">SESSION BY SESSION</span>
+        <h2>Charted the moment it's captured</h2>
+        <p>Each domain gets its own line, plotted the moment a new session is recorded — a steady gain, a slow decline, or a dip and recovery shows up as a shape, not a column of numbers to compare by eye.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card raised chart-card">
+          <div class="chart-head">
+            <div>
+              <span class="eyebrow">MOVEMENT</span>
+              <h3>Finger-to-nose endpoint error</h3>
+            </div>
+            <span class="trend-badge good">↓ 28% since S1</span>
+          </div>
+          <div class="chart-well sunken-lg">
+            <svg id="movementChart" viewBox="0 0 460 200"></svg>
+          </div>
+          <div class="chart-foot">
+            <span>S1 — 0.61 hand-spans</span>
+            <span>S8 — 0.44 hand-spans</span>
+          </div>
+        </div>
+
+        <div class="card raised chart-card">
+          <div class="chart-head">
+            <div>
+              <span class="eyebrow">EEG</span>
+              <h3>Posterior dominant rhythm</h3>
+            </div>
+            <span class="trend-badge warn">↓ slowing — flagged</span>
+          </div>
+          <div class="chart-well sunken-lg">
+            <svg id="eegChart" viewBox="0 0 460 200"></svg>
+          </div>
+          <div class="chart-foot">
+            <span>S1 — 10.4 Hz</span>
+            <span>S8 — 9.3 Hz</span>
+          </div>
+        </div>
+
+        <div class="card raised chart-card">
+          <div class="chart-head">
+            <div>
+              <span class="eyebrow">COGNITIVE</span>
+              <h3>Composite cognitive index</h3>
+            </div>
+            <span class="trend-badge neutral">dip at S3, recovered</span>
+          </div>
+          <div class="chart-well sunken-lg">
+            <svg id="cognitiveChart" viewBox="0 0 460 200"></svg>
+          </div>
+          <div class="chart-foot">
+            <span>S1 — 78 / 100</span>
+            <span>S8 — 83 / 100</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SIGNALS ================= -->
   <div class="signals wrap">
-    <div class="signals-shell neu-inset">
-      <span class="signals-label">What each visit records</span>
+    <div class="signals-shell sunken">
+      <span class="signals-label">Recorded at every visit</span>
       <div class="signals-items">
-        <div class="signal-tag neu-sm"><span class="dot-ic"></span> <b>Camera &amp; motion</b></div>
-        <div class="signal-tag neu-sm"><span class="dot-ic"></span> <b>Voice &amp; speech</b></div>
-        <div class="signal-tag neu-sm"><span class="dot-ic"></span> <b>EEG</b></div>
-        <div class="signal-tag neu-sm"><span class="dot-ic"></span> <b>Task interaction timing</b></div>
+        <div class="tag"><span class="led"></span> Camera &amp; movement</div>
+        <div class="tag"><span class="led"></span> Facial expression</div>
+        <div class="tag"><span class="led"></span> EEG</div>
+        <div class="tag"><span class="led"></span> Cognitive testing</div>
+        <div class="tag tag-soon"><span class="led"></span> Voice — coming next</div>
       </div>
     </div>
   </div>
 
-  <div class="cta-band-outer wrap" id="access">
-    <div class="cta-band neu">
-      <svg class="echo" viewBox="0 0 340 340" aria-hidden="true">
-        <g stroke="rgba(231,233,238,0.22)" stroke-width="1.4" fill="none" stroke-linecap="round">
-          <line x1="30" y1="300" x2="300" y2="280"/><line x1="30" y1="300" x2="305" y2="230"/><line x1="30" y1="300" x2="300" y2="170"/><line x1="30" y1="300" x2="280" y2="100"/><line x1="30" y1="300" x2="240" y2="40"/><line x1="30" y1="300" x2="170" y2="20"/>
-        </g>
-        <circle cx="30" cy="300" r="5" fill="#34C48A"/>
-      </svg>
+  <!-- ================= CTA ================= -->
+  <div class="cta-outer wrap" id="access">
+    <div class="cta raised">
       <div>
         <h2>Patternize is being built with pilot clinics, not launched all at once.</h2>
-        <p>If you're a neurologist, or work with one, tell us about your practice — we're adding a small number of clinics as the cognitive, motor, and EEG modules come online.</p>
+        <p>If you practice neurology, or work alongside someone who does, tell us about your clinic. We're adding a small number of sites as each module comes online.</p>
       </div>
-      <a class="btn btn-primary" href="mailto:hello@patternize.dev"><span class="dot-ic"></span> Get in touch</a>
+      <a class="btn btn-primary" href="mailto:hello@patternize.dev"><span class="led"></span> Get in touch</a>
     </div>
   </div>
 
@@ -491,111 +603,291 @@
 
 <footer>
   <div class="wrap">
-    <div class="footer-shell neu">
+    <div class="footer-shell raised">
       <div class="footer-row">
         <div>
           <a class="brand" href="#top">
-            <span class="mark-well">
+            <span class="mark">
               <svg viewBox="0 0 64 64" aria-hidden="true">
-                <g stroke="#E7E9EE" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85">
-                  <line x1="16" y1="48" x2="47" y2="45"/><line x1="16" y1="48" x2="48" y2="38"/><line x1="16" y1="48" x2="47" y2="29"/><line x1="16" y1="48" x2="44" y2="19"/><line x1="16" y1="48" x2="38" y2="11"/>
-                </g>
-                <circle cx="16" cy="48" r="4.4" fill="#34C48A"/>
+                <g class="fan" data-ax="16" data-ay="48" data-x2="52" data-ytop="12" data-count="9" stroke-width="1.5" stroke-linecap="round" fill="none"></g>
+                <circle class="dot" cx="16" cy="48" r="4"/>
               </svg>
             </span>
-            Patternize
+            <span class="brand-name">Patternize</span>
           </a>
-          <p class="tag">A measurement layer for the neurological exam — built for neurologists, one assessment at a time.</p>
+          <p class="tag-line">A measurement layer for brain function — built for neurologists, one assessment at a time.</p>
         </div>
         <nav>
           <a href="#overview">Overview</a>
-          <a href="#measurements">Measurements</a>
+          <a href="#measurements">What we measure</a>
           <a href="#approach">Approach</a>
+          <a href="#progress">Session charts</a>
           <a href="#access">Get in touch</a>
         </nav>
       </div>
-      <p class="fine">Patternize is a product in development and is not currently available for clinical use, diagnosis, or treatment decisions. All figures on this page are illustrative.</p>
+      <p class="fine">Patternize is a product in development and is not currently available for clinical use, diagnosis, or treatment decisions. All figures shown on this page are illustrative.</p>
     </div>
   </div>
 </footer>
 
 <script>
-  // ---------- Mobile menu ----------
-  const menuToggle = document.getElementById('menuToggle');
-  const primaryNav = document.getElementById('primary-nav');
-  menuToggle.addEventListener('click', () => {
-    const isOpen = primaryNav.classList.toggle('open');
-    menuToggle.setAttribute('aria-expanded', String(isOpen));
+/* ---------------------------------------------------------------------------
+   The mark: rays drawn from one apex to evenly spaced points along a
+   vertical edge, plus the green dot at the apex — nothing else. The hero
+   version reveals its rays one at a time, steepest first, tied to scroll
+   position, so the mark draws itself clockwise as the page is read.
+--------------------------------------------------------------------------- */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function buildFan(group){
+  const ax = +group.dataset.ax, ay = +group.dataset.ay;
+  const x2 = +group.dataset.x2, yTop = +group.dataset.ytop;
+  const count = +group.dataset.count;
+  const step = (ay - yTop) / (count - 1);
+  const lines = [];
+  for (let i = 0; i < count; i++){
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', ax);
+    line.setAttribute('y1', ay);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', (yTop + i * step).toFixed(2));
+    group.appendChild(line);
+    lines.push(line);
+  }
+  return lines;
+}
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const staticFans = [];
+let heroLines = [];
+
+document.querySelectorAll('.fan').forEach(group => {
+  const lines = buildFan(group);
+  if (group.id === 'heroFan'){
+    heroLines = lines;
+  } else {
+    group.classList.add('lit');
+    staticFans.push(group);
+  }
+});
+
+function updateHeroFan(){
+  if (!heroLines.length) return;
+  if (reduceMotion){
+    heroLines.forEach(l => l.style.opacity = 1);
+    return;
+  }
+  const range = window.innerHeight * 0.6;
+  const progress = Math.min(Math.max(window.scrollY / range, 0), 1);
+  const shown = progress * heroLines.length;
+  // Clockwise: steepest ray (last in the array, nearest the top) fills first.
+  const ordered = heroLines.slice().reverse();
+  ordered.forEach((line, k) => {
+    line.style.opacity = Math.min(Math.max(shown - k, 0), 1).toFixed(3);
   });
+}
 
-  // ---------- Nav highlight: current section sits raised in the pressed track ----------
-  (function () {
-    const links = [...document.querySelectorAll('nav.links a')];
-    const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        links.forEach(l => l.classList.remove('is-active'));
-        const a = map.get(e.target.id);
-        if (a) a.classList.add('is-active');
-      });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-    map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
-  })();
+let ticking = false;
+function onScroll(){
+  if (!ticking){ requestAnimationFrame(() => { updateHeroFan(); ticking = false; }); ticking = true; }
+}
+window.addEventListener('scroll', onScroll, { passive:true });
+window.addEventListener('resize', onScroll);
+updateHeroFan();
 
-  // ---------- Fan mark: rays appear one by one, clockwise, as you scroll ----------
-  (function () {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* ---------------------------------------------------------------------------
+   Session charts — one smoothed line per metric, drawn from plain data
+   arrays so a future real dataset only has to replace the numbers below.
+   Colors are set via var(--accent) / var(--warn) so they follow theme
+   changes automatically without re-rendering.
+--------------------------------------------------------------------------- */
+(function(){
+  const CHARTS = {
+    movementChart: { values:[0.61,0.58,0.53,0.55,0.50,0.47,0.46,0.44], color:'var(--accent)' },
+    eegChart:      { values:[10.4,10.2,10.1,9.9,9.7,9.6,9.4,9.3],       color:'var(--warn)'   },
+    cognitiveChart:{ values:[78,74,71,73,76,79,81,83],                 color:'var(--accent)' }
+  };
 
-    const VERTEX = { x: 120, y: 430 };
-    const RAY_COUNT = 17;
-    const ANGLE_START = 5;
-    const ANGLE_END = 83;
+  function smoothPath(points){
+    let d = `M ${points[0].x},${points[0].y}`;
+    for (let i = 0; i < points.length - 1; i++){
+      const p0 = points[i - 1] || points[i];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[i + 2] || p2;
+      const c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+      const c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+      d += ` C ${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+    }
+    return d;
+  }
 
-    const baseLines = document.getElementById('fanBaseLines');
-    const fanDot = document.getElementById('fanDot');
-    fanDot.setAttribute('cx', VERTEX.x);
-    fanDot.setAttribute('cy', VERTEX.y);
+  function renderChart(id, cfg){
+    const svg = document.getElementById(id);
+    if (!svg) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const W = 460, H = 200, padL = 20, padR = 20, padT = 18, padB = 24;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const vals = cfg.values;
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const pad = (max - min || 1) * 0.3;
+    const yMin = min - pad, yMax = max + pad;
 
-    const rays = [];
-    for (let i = 0; i < RAY_COUNT; i++) {
-      const t = i / (RAY_COUNT - 1);
-      const angle = ANGLE_START + t * (ANGLE_END - ANGLE_START);
-      const rad = (angle * Math.PI) / 180;
-      const len = 280 + Math.sin(i * 2.1) * 40 + (i % 3) * 12;
+    const pts = vals.map((v, i) => ({
+      x: padL + (i / (vals.length - 1)) * innerW,
+      y: padT + (1 - (v - yMin) / (yMax - yMin)) * innerH
+    }));
 
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', VERTEX.x);
-      line.setAttribute('y1', VERTEX.y);
-      line.setAttribute('x2', VERTEX.x + Math.cos(rad) * len);
-      line.setAttribute('y2', VERTEX.y - Math.sin(rad) * len);
-      line.setAttribute('stroke-width', 1 + t * 0.6);
-      baseLines.appendChild(line);
-      rays.push(line);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    for (let g = 0; g <= 2; g++){
+      const gy = (padT + (g / 2) * innerH).toFixed(1);
+      const line = document.createElementNS(NS, 'line');
+      line.setAttribute('x1', padL); line.setAttribute('x2', W - padR);
+      line.setAttribute('y1', gy); line.setAttribute('y2', gy);
+      line.setAttribute('stroke', 'var(--shadow-light)');
+      line.setAttribute('stroke-width', '1');
+      line.setAttribute('stroke-dasharray', '2 5');
+      svg.appendChild(line);
     }
 
-    // Clockwise around the vertex = from the steepest ray down to the flattest.
-    const clockwise = rays.slice().reverse();
+    const gradId = id + 'Grad';
+    const defs = document.createElementNS(NS, 'defs');
+    const grad = document.createElementNS(NS, 'linearGradient');
+    grad.setAttribute('id', gradId);
+    grad.setAttribute('x1', '0'); grad.setAttribute('y1', '0');
+    grad.setAttribute('x2', '0'); grad.setAttribute('y2', '1');
+    [[ '0%', '.22' ], [ '100%', '0' ]].forEach(([offset, opacity]) => {
+      const stop = document.createElementNS(NS, 'stop');
+      stop.setAttribute('offset', offset);
+      stop.setAttribute('stop-color', cfg.color);
+      stop.setAttribute('stop-opacity', opacity);
+      grad.appendChild(stop);
+    });
+    defs.appendChild(grad);
+    svg.appendChild(defs);
 
-    if (reduceMotion) { clockwise.forEach(l => l.style.opacity = 1); return; }
+    const pathD = smoothPath(pts);
 
-    let ticking = false;
-    function update() {
-      ticking = false;
-      const range = window.innerHeight * 0.6;              // scroll distance to reveal all rays
-      const progress = Math.min(Math.max(window.scrollY / range, 0), 1);
-      const shown = progress * clockwise.length;
-      clockwise.forEach((line, k) => {
-        line.style.opacity = Math.min(Math.max(shown - k, 0), 1).toFixed(3);
-      });
-    }
-    function onScroll() {
-      if (!ticking) { requestAnimationFrame(update); ticking = true; }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
-  })();
+    const area = document.createElementNS(NS, 'path');
+    area.setAttribute('d', `${pathD} L ${pts[pts.length - 1].x.toFixed(1)},${H - padB} L ${pts[0].x.toFixed(1)},${H - padB} Z`);
+    area.setAttribute('fill', `url(#${gradId})`);
+    svg.appendChild(area);
+
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', pathD);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', cfg.color);
+    path.setAttribute('stroke-width', '2.4');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(path);
+
+    pts.forEach((p, i) => {
+      const isLast = i === pts.length - 1;
+      const dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('cx', p.x.toFixed(1)); dot.setAttribute('cy', p.y.toFixed(1));
+      dot.setAttribute('r', isLast ? 5 : 2.6);
+      dot.setAttribute('fill', isLast ? cfg.color : 'var(--bg)');
+      dot.setAttribute('stroke', cfg.color);
+      dot.setAttribute('stroke-width', isLast ? 0 : 1.6);
+      svg.appendChild(dot);
+
+      const label = document.createElementNS(NS, 'text');
+      label.setAttribute('x', p.x.toFixed(1));
+      label.setAttribute('y', H - 6);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('font-family', 'JetBrains Mono, monospace');
+      label.setAttribute('font-size', '8.5');
+      label.setAttribute('fill', 'var(--faint)');
+      label.textContent = 'S' + (i + 1);
+      svg.appendChild(label);
+    });
+  }
+
+  Object.keys(CHARTS).forEach(id => renderChart(id, CHARTS[id]));
+  window.addEventListener('resize', () => Object.keys(CHARTS).forEach(id => renderChart(id, CHARTS[id])));
+})();
+
+/* ---------- theme toggle ---------- */
+(function(){
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  function sync(){ btn.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'light')); }
+  sync();
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('patternize-theme', next); }catch(e){}
+    sync();
+  });
+})();
+
+/* ---------- mobile menu ---------- */
+const menuToggle = document.getElementById('menuToggle');
+const primaryNav = document.getElementById('primary-nav');
+menuToggle.addEventListener('click', () => {
+  const open = primaryNav.classList.toggle('open');
+  menuToggle.setAttribute('aria-expanded', String(open));
+});
+primaryNav.addEventListener('click', e => {
+  if (e.target.tagName === 'A'){ primaryNav.classList.remove('open'); menuToggle.setAttribute('aria-expanded','false'); }
+});
+
+/* ---------- nav: current section rides raised inside the pressed track ---------- */
+(function(){
+  const links = [...document.querySelectorAll('nav.links a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(l => l.classList.remove('is-active'));
+      const a = map.get(e.target.id);
+      if (a) a.classList.add('is-active');
+    });
+  }, { rootMargin: '-42% 0px -52% 0px' });
+  map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+})();
+
+/* ---------- visit tabs ---------- */
+(function(){
+  const VISITS = {
+    1: [
+      ['Mini-Cog (clinical score)', '4 / 5', false],
+      ['Finger-to-nose endpoint error', '0.42 hand-spans', false],
+      ['Facial expression asymmetry', 'baseline', false],
+      ['EEG posterior rhythm', '9.8 Hz', false]
+    ],
+    2: [
+      ['Mini-Cog (clinical score)', '4 / 5', false],
+      ['Finger-to-nose endpoint error', '↓ 9% vs. visit 1', true],
+      ['Facial expression asymmetry', 'stable', false],
+      ['EEG posterior rhythm', '9.6 Hz', false]
+    ],
+    3: [
+      ['Mini-Cog (clinical score)', '5 / 5', true],
+      ['Finger-to-nose endpoint error', '↓ 12% vs. visit 1', true],
+      ['Facial expression asymmetry', '↓ improved', true],
+      ['EEG posterior rhythm', '9.9 Hz', false]
+    ]
+  };
+  const host = document.getElementById('visitRows');
+  const tabs = [...document.querySelectorAll('.visit-tab')];
+
+  function render(n){
+    host.innerHTML = VISITS[n].map(([label, value, good]) =>
+      `<div class="visit-row"><span class="label">${label}</span><span class="value${good ? ' good' : ''}">${value}</span></div>`
+    ).join('');
+  }
+  tabs.forEach(tab => tab.addEventListener('click', () => {
+    tabs.forEach(t => { t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
+    tab.classList.add('is-active');
+    tab.setAttribute('aria-selected','true');
+    render(tab.dataset.visit);
+  }));
+  render(1);
+})();
 </script>
 
 </body>
