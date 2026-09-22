@@ -73,6 +73,19 @@ nav.links a:hover{color:var(--ink);}
 .card li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.7;}
 @media(max-width:980px){.grid-4{grid-template-columns:1fr 1fr;}}
 @media(max-width:600px){.grid-4{grid-template-columns:1fr;}}
+
+/* app screenshot showcase */
+.shot-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:52px;align-items:center;}
+.shot-frame{padding:16px;cursor:pointer;transition:box-shadow .35s ease,transform .35s ease;will-change:transform;}
+.shot-frame:hover,.shot-frame:focus-visible{transform:translateY(-10px);box-shadow:18px 18px 34px var(--shadow-dark),-18px -18px 34px var(--shadow-light);}
+.shot-frame img{width:100%;display:block;border-radius:16px;}
+.shot-cap{margin-top:14px;font-size:.78rem;color:var(--faint);text-align:center;}
+.shot-copy .lede{margin-top:18px;color:var(--muted);font-size:1rem;max-width:40ch;}
+.shot-list{margin:22px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;}
+.shot-list li{font-size:.9rem;color:var(--muted);padding-left:18px;position:relative;}
+.shot-list li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+@media(max-width:940px){.shot-grid{grid-template-columns:1fr;gap:30px;}}
+
 .approach-grid{display:grid;grid-template-columns:.86fr 1.14fr;gap:54px;align-items:start;}
 .approach-grid h2{max-width:13ch;}
 .approach-grid .lede{margin-top:18px;color:var(--muted);font-size:1rem;max-width:38ch;}
@@ -141,6 +154,7 @@ footer nav a{color:var(--muted);}
     </a>
     <nav class="links" id="primary-nav">
       <a href="#measure">What we measure</a>
+      <a href="#inside">Inside the app</a>
       <a href="#approach">Approach</a>
       <a href="#charts">Session data</a>
       <a href="#visits">Visit by visit</a>
@@ -221,7 +235,25 @@ footer nav a{color:var(--muted);}
   </div>
 </section>
 
-<section class="sec-light" id="approach">
+<section class="sec-light" id="inside">
+  <div class="wrap shot-grid">
+    <a class="shot-frame raised" href="screenpat.png" target="_blank" rel="noopener" aria-label="Open full-size screenshot of the EEG analysis panel">
+      <img src="screenpat.png" alt="Patternize EEG analysis panel, showing topographic mapping and band-power breakdown" loading="lazy">
+    </a>
+    <div class="shot-copy">
+      <span class="eyebrow">Inside the app</span>
+      <h2>The EEG panel, exactly as your team will see it.</h2>
+      <p class="lede">This is the actual EEG analysis screen — the recording resolved into topography and band power the moment it loads, not a raw trace to page through.</p>
+      <ul class="shot-list">
+        <li>Scalp topography rendered per frequency band</li>
+        <li>Dominant rhythm and hemispheric symmetry surfaced at a glance</li>
+        <li>Every reading compared against the patient's own baseline</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec-dark" id="approach">
   <div class="wrap approach-grid">
     <div>
       <span class="eyebrow">Approach</span>
@@ -238,7 +270,7 @@ footer nav a{color:var(--muted);}
   </div>
 </section>
 
-<section class="sec-dark" id="charts">
+<section class="sec-light" id="charts">
   <div class="wrap">
     <div class="shead">
       <span class="eyebrow">Session data</span>
@@ -269,7 +301,7 @@ footer nav a{color:var(--muted);}
   </div>
 </section>
 
-<section class="sec-light" id="visits">
+<section class="sec-dark" id="visits">
   <div class="wrap">
     <div class="shead">
       <span class="eyebrow">Visit by visit</span>
@@ -295,7 +327,7 @@ footer nav a{color:var(--muted);}
   </div>
 </section>
 
-<section class="sec-dark" id="trust">
+<section class="sec-light" id="trust">
   <div class="wrap">
     <div class="shead"><span class="eyebrow">Trust</span><h2>Built to be checked, not just believed.</h2></div>
     <div class="trust-grid">
@@ -306,7 +338,7 @@ footer nav a{color:var(--muted);}
   </div>
 </section>
 
-<section class="sec-light" id="access">
+<section class="sec-dark" id="access">
   <div class="wrap">
     <div class="cta raised">
       <div><h2>Patternize is onboarding a first group of clinics.</h2><p>If you practice neurology, or work alongside someone who does, tell us about your clinic. We're adding a small number of sites as each module comes online.</p></div>
@@ -317,7 +349,7 @@ footer nav a{color:var(--muted);}
 
 </main>
 
-<footer class="sec-dark">
+<footer class="sec-light">
   <div class="wrap">
     <div class="footer-shell raised">
       <div class="footer-row">
@@ -325,7 +357,7 @@ footer nav a{color:var(--muted);}
           <a class="brand" href="#top"><span class="mark sunken"><svg viewBox="0 0 64 64"><g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"><line x1="16" y1="48" x2="51" y2="48"/><line x1="16" y1="48" x2="51" y2="36"/><line x1="16" y1="48" x2="51" y2="24"/><line x1="16" y1="48" x2="51" y2="12"/></g><circle cx="16" cy="48" r="4" fill="var(--accent)"/></svg></span><span class="brand-name">Patternize</span></a>
           <p class="tag-line">A measurement layer for brain function — built for neurologists, one assessment at a time.</p>
         </div>
-        <nav><a href="#measure">What we measure</a><a href="#approach">Approach</a><a href="#charts">Session data</a><a href="#visits">Visit by visit</a><a href="#access">Get in touch</a></nav>
+        <nav><a href="#measure">What we measure</a><a href="#inside">Inside the app</a><a href="#approach">Approach</a><a href="#charts">Session data</a><a href="#visits">Visit by visit</a><a href="#access">Get in touch</a></nav>
       </div>
       <p class="fine">Patternize is a product in development and is not currently available for clinical use, diagnosis, or treatment decisions. All figures shown on this page are illustrative.</p>
     </div>
